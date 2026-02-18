@@ -48,6 +48,67 @@ body {
     }
 }
 
+/* Responsividade para Tablets (768px a 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .container {
+        max-width: 500px;
+        padding: 40px 30px;
+    }
+
+    .scoreboard {
+        font-size: 3.5rem;
+        padding: 30px 15px;
+        margin: 30px 0;
+    }
+
+    .header-icons {
+        top: 20px;
+        right: 20px;
+        gap: 15px;
+    }
+
+    .icon-btn {
+        font-size: 20px;
+    }
+
+    .players {
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .players input {
+        width: 45%;
+    }
+
+    .input-section {
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    input[type=number], input[type=text] {
+        padding: 15px;
+    }
+
+    #adicionar {
+        padding: 18px;
+        font-size: 1.1rem;
+    }
+
+    .modal-content {
+        margin: 10% auto;
+        padding: 30px;
+        max-width: 450px;
+    }
+
+    .round-card {
+        padding: 20px;
+    }
+
+    .round-scores {
+        font-size: 1.2rem;
+    }
+}
+
 .container {
     position: relative;
     width: 100%;
