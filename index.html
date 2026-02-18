@@ -2,62 +2,53 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contador de Pontos - Tranca</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Placar Tranca Pro</title>
+    <link rel="icon" type="image/x-icon" href="contador-tranca.ico">
+    <link rel="apple-touch-icon" href="contador-tranca.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="baralho.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-    <main class="container-wrapper">
-        <div class="container">
-            <div class="header-icons">
-                <button class="theme-toggle-icon" title="Mudar tema">
-                    <i class="fas fa-sun"></i>
-                </button>
-                <button class="reset-icon" title="Resetar">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-            
-            <h2>Placar Tranca</h2>
+    <main class="container">
+        <header class="header-icons">
+            <button id="btn-finish" class="icon-btn finish-icon" title="Finalizar Turno"><i class="fas fa-check-double"></i></button>
+            <button id="btn-history" class="icon-btn" title="Evolução"><i class="fas fa-history"></i></button>
+            <button id="btn-theme" class="icon-btn"><i class="fas fa-sun"></i></button>
+            <button id="btn-reset" class="icon-btn"><i class="fas fa-trash-alt"></i></button>
+        </header>
 
-            <div class="players">
-                <label for="nome1" class="visually-hidden">Nome da Dupla 1</label>
-                <input type="text" id="nome1" value="Dupla 1">
-                <span>x</span>
-                <label for="nome2" class="visually-hidden">Nome da Dupla 2</label>
-                <input type="text" id="nome2" value="Dupla 2">
-            </div>
+        <h2>Placar Tranca</h2>
 
-            <div class="scoreboard">
-                <h3><span class="score" id="total1">0</span></h3>
-                <h3><span class="score" id="total2">0</span></h3>
-            </div>
-
-            <div class="history">
-                <div id="history1" class="history-column"></div>
-                <div id="history2" class="history-column"></div>
-            </div>
-
-            <div class="input-section">
-                <label for="pontos1" class="visually-hidden">Pontos para a Dupla 1</label>
-                <input type="number" id="pontos1" placeholder="Pontos dupla 1">
-                <label for="pontos2" class="visually-hidden">Pontos para a Dupla 2</label>
-                <input type="number" id="pontos2" placeholder="Pontos dupla 2">
-            </div>
-
-            <div class="buttons">
-                <button id="adicionar">Adicionar Pontos</button>
-            </div>
-
-            <h3>Diferença: <span id="diferenca">0</span></h3>
+        <div class="players">
+            <input type="text" id="nome1" value="Dupla 1" spellcheck="false">
+            <span>x</span>
+            <input type="text" id="nome2" value="Dupla 2" spellcheck="false">
         </div>
+
+        <div class="scoreboard">
+            <span id="total1">0</span>
+            <span id="total2">0</span>
+        </div>
+
+        <div class="input-section">
+            <input type="number" id="in1" placeholder="Adicione Pontos" inputmode="numeric">
+            <input type="number" id="in2" placeholder="Adicione Pontos" inputmode="numeric">
+        </div>
+
+        <button id="adicionar">Adicionar Pontos</button>
+        <p class="difference-text">Diferença: <span id="diff">0</span></p>
     </main>
 
-    <footer>
-        Desenvolvido por Bryan Muller
-    </footer>
+    <div id="modal-history" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top:0">Evolução da Partida</h3>
+            <div id="round-list" style="max-height: 60vh; overflow-y: auto;"></div>
+            <button id="btn-close-modal" class="btn-close-modal">Fechar</button>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

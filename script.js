@@ -1,153 +1,106 @@
 (function() {
-    // 1. Cache dos elementos do DOM
-    const total1El = document.getElementById('total1');
-    const total2El = document.getElementById('total2');
-    const diferencaEl = document.getElementById('diferenca');
-    const history1El = document.getElementById('history1');
-    const history2El = document.getElementById('history2');
-    const pontos1Input = document.getElementById('pontos1');
-    const pontos2Input = document.getElementById('pontos2');
-    const nome1Input = document.getElementById('nome1');
-    const nome2Input = document.getElementById('nome2');
-    const addButton = document.getElementById('adicionar');
-    const resetButton = document.querySelector('.reset-icon');
-    const themeToggleButton = document.querySelector('.theme-toggle-icon');
-
-    // 2. Estado da aplicação
-    let placar = {
-        dupla1: 0,
-        dupla2: 0
+    // Estado inicial
+    let state = {
+        score1: 0,
+        score2: 0,
+        name1: "Dupla 1",
+        name2: "Dupla 2",
+        rounds: []
     };
 
-    // 3. Funções
+    const dom = {
+        t1: document.getElementById('total1'),
+        t2: document.getElementById('total2'),
+        diff: document.getElementById('diff'),
+        in1: document.getElementById('in1'),
+        in2: document.getElementById('in2'),
+        n1: document.getElementById('nome1'),
+        n2: document.getElementById('nome2'),
+        modal: document.getElementById('modal-history'),
+        list: document.getElementById('round-list')
+    };
 
-    // --- LÓGICA PARA O TEMA ---
-    const themeIcon = themeToggleButton.querySelector('i');
-
-    function aplicarTema(tema) {
-        if (tema === 'light') {
-            document.body.classList.add('light-mode');
-            themeIcon.classList.remove('fa-sun');
-            themeIcon.classList.add('fa-moon');
-        } else {
-            document.body.classList.remove('light-mode');
-            themeIcon.classList.remove('fa-moon');
-            themeIcon.classList.add('fa-sun');
-        }
+    // Salva o estado completo no LocalStorage
+    function saveToStorage() {
+        state.name1 = dom.n1.value;
+        state.name2 = dom.n2.value;
+        localStorage.setItem('tranca_pwa_data', JSON.stringify(state));
     }
 
-    function trocarTema() {
-        const temaAtual = document.body.classList.contains('light-mode') ? 'light' : 'dark';
-        const novoTema = temaAtual === 'light' ? 'dark' : 'light';
+    // Carrega e renderiza a interface
+    function renderUI() {
+        dom.t1.innerText = state.score1;
+        dom.t2.innerText = state.score2;
+        dom.n1.value = state.name1;
+        dom.n2.value = state.name2;
+        dom.diff.innerText = Math.abs(state.score1 - state.score2);
         
-        aplicarTema(novoTema);
-        localStorage.setItem('theme', novoTema);
+        dom.list.innerHTML = state.rounds.map(r => {
+            const diff = Math.abs(r.s1 - r.s2);
+            const winnerClass = r.s1 > r.s2 ? 'winner-1' : (r.s2 > r.s1 ? 'winner-2' : '');
+            const leadText = r.s1 > r.s2 ? `${r.name1} na frente` : (r.s2 > r.s1 ? `${r.name2} na frente` : 'Empate');
+
+            return `
+                <div class="round-card ${winnerClass}">
+                    <div class="round-header"><span>Rodada #${r.id}</span><span>${leadText}</span></div>
+                    <div class="round-scores">
+                        <span style="color:var(--accent-green)">${r.name1}: ${r.s1}</span>
+                        <span style="color:var(--accent-blue)">${r.name2}: ${r.s2}</span>
+                    </div>
+                    <div class="round-diff">Diferença de ${diff} pontos</div>
+                </div>
+            `;
+        }).join('') || '<p>Nenhum registro de turno.</p>';
     }
 
-    function aplicarTemaInicial() {
-        const temaSalvo = localStorage.getItem('theme');
-        const prefereModoClaro = window.matchMedia('(prefers-color-scheme: light)').matches;
+    // Ações
+    document.getElementById('adicionar').onclick = () => {
+        state.score1 += parseInt(dom.in1.value) || 0;
+        state.score2 += parseInt(dom.in2.value) || 0;
+        dom.in1.value = ''; dom.in2.value = '';
+        saveToStorage();
+        renderUI();
+        dom.in1.focus();
+    };
 
-        if (temaSalvo) {
-            aplicarTema(temaSalvo);
-        } else if (prefereModoClaro) {
-            aplicarTema('light');
-        } else {
-            aplicarTema('dark'); // Padrão
+    document.getElementById('btn-finish').onclick = () => {
+        const newRound = {
+            id: state.rounds.length + 1,
+            s1: state.score1,
+            s2: state.score2,
+            name1: dom.n1.value,
+            name2: dom.n2.value
+        };
+        state.rounds.unshift(newRound);
+        saveToStorage();
+        renderUI();
+    };
+
+    // Gestão de Modal e Reset
+    document.getElementById('btn-history').onclick = () => dom.modal.style.display = 'block';
+    document.getElementById('btn-close-modal').onclick = () => dom.modal.style.display = 'none';
+    document.getElementById('btn-reset').onclick = () => {
+        if(confirm("Deseja resetar todo o jogo e histórico?")) {
+            state = { score1: 0, score2: 0, name1: "Dupla 1", name2: "Dupla 2", rounds: [] };
+            localStorage.removeItem('tranca_pwa_data');
+            renderUI();
         }
-    }
+    };
 
-    // --- LÓGICA DO PLACAR ---
-    function salvarEstado() {
-        localStorage.setItem('placarTranca', JSON.stringify(placar));
-        localStorage.setItem('history1Tranca', history1El.innerHTML);
-        localStorage.setItem('history2Tranca', history2El.innerHTML);
-    }
+    // Sincroniza nomes em tempo real
+    dom.n1.oninput = saveToStorage;
+    dom.n2.oninput = saveToStorage;
 
-    function carregarEstado() {
-        const placarSalvo = localStorage.getItem('placarTranca');
-        const history1Salvo = localStorage.getItem('history1Tranca');
-        const history2Salvo = localStorage.getItem('history2Tranca');
+    // Tema
+    document.getElementById('btn-theme').onclick = () => {
+        const isLight = document.body.classList.toggle('light-mode');
+        localStorage.setItem('tranca_theme', isLight ? 'light' : 'dark');
+    };
 
-        if (placarSalvo) {
-            placar = JSON.parse(placarSalvo);
-        }
-        if (history1Salvo) {
-            history1El.innerHTML = history1Salvo;
-        }
-        if (history2Salvo) {
-            history2El.innerHTML = history2Salvo;
-        }
-        atualizarInterface();
-    }
-
-    function adicionarPontos() {
-        const pontosJ1 = parseInt(pontos1Input.value) || 0;
-        const pontosJ2 = parseInt(pontos2Input.value) || 0;
-
-        placar.dupla1 += pontosJ1;
-        placar.dupla2 += pontosJ2;
-
-        if (pontosJ1 !== 0) {
-            history1El.innerHTML += `<div class="history-item ${pontosJ1 > 0 ? 'positive' : 'negative'}">${pontosJ1}</div>`;
-        }
-        if (pontosJ2 !== 0) {
-            history2El.innerHTML += `<div class="history-item ${pontosJ2 > 0 ? 'positive' : 'negative'}">${pontosJ2}</div>`;
-        }
-        
-        atualizarInterface();
-        pontos1Input.value = '';
-        pontos2Input.value = '';
-        pontos1Input.focus();
-        salvarEstado();
-    }
-
-    function resetarPontos() {
-        if (confirm("Tem certeza que deseja zerar o placar?")) {
-            placar.dupla1 = 0;
-            placar.dupla2 = 0;
-            history1El.innerHTML = '';
-            history2El.innerHTML = '';
-            atualizarInterface();
-            salvarEstado();
-        }
-    }
+    // Init
+    const savedData = JSON.parse(localStorage.getItem('tranca_pwa_data'));
+    if(savedData) state = savedData;
+    if(localStorage.getItem('tranca_theme') === 'light') document.body.classList.add('light-mode');
     
-    function atualizarInterface() {
-        const diferenca = Math.abs(placar.dupla1 - placar.dupla2);
-        total1El.innerText = placar.dupla1;
-        total2El.innerText = placar.dupla2;
-        diferencaEl.innerText = diferenca;
-    }
-
-    function atualizarPlaceholders() {
-        const nome1 = nome1Input.value || 'Dupla 1';
-        const nome2 = nome2Input.value || 'Dupla 2';
-        pontos1Input.placeholder = `Pontos ${nome1}`;
-        pontos2Input.placeholder = `Pontos ${nome2}`;
-    }
-
-    // 4. Adicionando os Event Listeners
-    addButton.addEventListener('click', adicionarPontos);
-    resetButton.addEventListener('click', resetarPontos);
-    themeToggleButton.addEventListener('click', trocarTema);
-    nome1Input.addEventListener('input', atualizarPlaceholders);
-    nome2Input.addEventListener('input', atualizarPlaceholders);
-    
-    pontos2Input.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            adicionarPontos();
-        }
-    });
-    
-    pontos1Input.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            pontos2Input.focus();
-        }
-    });
-
-    // --- INICIALIZAÇÃO DA APLICAÇÃO ---
-    aplicarTemaInicial();
-    carregarEstado();
-    atualizarPlaceholders();
+    renderUI();
 })();

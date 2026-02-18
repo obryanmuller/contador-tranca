@@ -1,4 +1,4 @@
-/* Variáveis para o tema escuro (padrão) */
+/* Variáveis e Definição de Temas */
 :root {
     --bg-body: #2c3e50;
     --bg-card: #34495e;
@@ -19,259 +19,249 @@
     --border-radius-sm: 6px;
 }
 
-/* Variáveis para o tema claro */
+/* Modo Claro */
 body.light-mode {
     --bg-body: #f0f2f5;
     --bg-card: #ffffff;
-    --bg-text: #34495e;
-    --text-primary: var(--bg-text); /* ALTERADO: Cor principal do texto agora é azul */
+    --text-primary: #34495e;
     --text-secondary: #6b7280;
     --input-bg: #e9ecef;
     --input-border: #ced4da;
     --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
+/* Reset Global para PWA */
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
 body {
     font-family: var(--font-main);
-    text-align: center;
-    background-color: var(--bg-body);
+    /* ADIÇÃO DA IMAGEM DE FUNDO */
+    background-image: url('Fundo.png');
+    background-size: cover;        /* Garante que a imagem cubra toda a tela */
+    background-position: center;   /* Centraliza a imagem */
+    background-attachment: fixed; /* Mantém o fundo fixo ao rolar no iPhone */
+    background-repeat: no-repeat;
+    
     color: var(--text-primary);
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    padding: 20px;
-    box-sizing: border-box;
-    transition: background-color 0.3s, color 0.3s;
+    padding: 15px;
+    transition: background-color 0.3s;
 }
 
-.visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-}
-
-.container-wrapper {
+/* Container Principal Centralizado */
+.container {
     position: relative;
+    width: 100%;
+    max-width: 380px;
+    padding: 30px 20px;
+    background: var(--bg-card);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0px 8px 25px var(--shadow-color);
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Ícones de Gestão no Topo */
+.header-icons {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 12px;
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    color: var(--text-primary);
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.2s;
+}
+
+.icon-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.finish-icon:hover { color: var(--accent-green); }
+.reset-icon:hover { color: var(--accent-red); }
+
+h2 {
+    font-size: 2rem;
+    margin: 10px 0 20px 0;
     width: 100%;
 }
 
-.container {
-    position: relative;
-    width: 90%;
-    max-width: 450px;
-    padding: 20px;
-    background: var(--bg-card);
-    box-shadow: 0px 8px 25px var(--shadow-color);
-    border-radius: var(--border-radius-lg);
-    transition: background-color 0.3s, box-shadow 0.3s;
-}
-
-h2 {
-    font-weight: 800;
-    font-size: 2.2em;
-    margin-bottom: 20px;
-    color: var(--text-primary);
-}
-
-/* NOVO: Estilo para o contêiner dos ícones */
-.header-icons {
-    position: absolute;
-    top: 20px;
-    right: 20px;
+/* Placar Principal */
+.scoreboard {
     display: flex;
-    gap: 12px; /* Espaço entre os ícones */
-}
-
-/* ALTERADO: Removemos o posicionamento individual */
-.reset-icon,
-.theme-toggle-icon {
-    position: static; /* Removemos o 'absolute' pois o pai já controla */
-    background: transparent;
-    border: none;
-    font-size: 22px;
-    color: var(--text-primary);
-    cursor: pointer;
-    padding: 5px;
-}
-
-.reset-icon:hover {
-    color: var(--accent-red);
-}
-
-.theme-toggle-icon:hover {
-    color: var(--accent-blue);
-}
-
-/* O restante do CSS permanece igual ao anterior... */
-.players, .scoreboard, .history, .input-section, .buttons {
-    display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
+    width: 100%;
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    padding: 20px 10px;
+    background: rgba(0,0,0,0.1);
+    border-radius: var(--border-radius-md);
+}
+
+#total1 { color: var(--accent-green); }
+#total2 { color: var(--accent-blue); }
+
+/* Nomes das Duplas */
+.players {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
     margin-bottom: 15px;
 }
 
-.players span {
-    font-size: 1.5em;
-    font-weight: 700;
-    color: var(--text-secondary);
-    margin: 0 10px;
-}
-
-.scoreboard {
-    justify-content: space-around;
-    width: 100%;
-    font-size: 2.2rem;
-    background-color: rgba(0,0,0,0.15);
-    border-radius: var(--border-radius-md);
-    margin-bottom: 20px;
-}
-
-.score {
-    flex: 1;
-    text-align: center;
-    font-weight: 800;
-    color: var(--accent-green);
-}
-
-#total2.score {
-    color: var(--accent-blue);
-}
-
-.history {
-    min-height: 100px;
-    gap: 16px;
-}
-
-.history-column {
-    flex: 1;
-    height: 90px;
-    overflow-y: auto;
-    background: #e9ecef;
-    border: 1px solid #d1d9e0;
-    padding: 10px;
-    text-align: center;
-    border-radius: var(--border-radius-md);
-    color: #333;
-}
-
-.history-item {
-    font-size: 1em;
-    padding: 6px 8px;
-    margin: 4px 0;
-    font-weight: 700;
-    border-radius: 4px;
-}
-
-.history-item.positive {
-    color: #198754;
-    background-color: rgba(25, 135, 84, 0.12);
-}
-
-.history-item.negative {
-    color: #dc3545;
-    background-color: rgba(220, 53, 69, 0.12);
-}
-
-.history-column::-webkit-scrollbar {
-    width: 8px;
-}
-.history-column::-webkit-scrollbar-track {
-    background: rgba(0,0,0,0.05);
-    border-radius: 10px;
-}
-.history-column::-webkit-scrollbar-thumb {
-    background: var(--text-secondary);
-    border-radius: 10px;
-}
-.history-column::-webkit-scrollbar-thumb:hover {
-    background: #95a5a6;
-}
-
-input[type=number], input[type=text] {
-    width: 48%;
-    font-size: 1em;
-    text-align: center;
-    border: 1px solid var(--input-border);
-    border-radius: var(--border-radius-sm);
-    padding: 10px 8px;
-    outline: none;
-    background-color: var(--input-bg);
-    color: var(--text-primary);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    box-sizing: border-box;
-}
-
-input[type=number]:focus, input[type=text]:focus {
-    border-color: var(--accent-green);
-    box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.25);
-}
-
-.players input[type=text] {
+.players input {
     background: transparent;
-    font-family: var(--font-main);
-    font-weight: 700;
-    font-size: 1.3rem;
-    padding: 8px 10px;
     border: none;
-    border-bottom: 2px solid var(--text-secondary);
+    border-bottom: 1px solid var(--text-secondary);
+    color: inherit;
+    font-weight: bold;
+    text-align: center;
+    width: 40%;
+    outline: none;
+    font-size: 1rem;
 }
 
-.players input[type=text]:focus {
-    border-bottom-color: var(--accent-green);
-    box-shadow: none;
-}
-
-input::placeholder {
-    color: #a2b4c6;
-    opacity: 1;
-}
-
-button {
+/* Secção de Inputs Lado a Lado (Corrigida) */
+.input-section {
+    display: flex;
+    gap: 10px;
     width: 100%;
-    padding: 10px;
-    font-size: 1.1em;
-    font-family: var(--font-main);
-    font-weight: 700;
-    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+input[type=number] {
+    flex: 1;
+    min-width: 0;
+    padding: 12px;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--input-border);
+    background: var(--input-bg);
+    color: var(--text-primary);
+    text-align: center;
+    font-size: 1rem;
+    outline: none;
+}
+
+input[type=number]:focus {
+    border-color: var(--accent-green);
+}
+
+/* Botão Adicionar */
+#adicionar {
+    width: 100%;
+    padding: 15px;
+    background: var(--btn-add-bg);
+    color: white;
     border: none;
     border-radius: var(--border-radius-sm);
-    transition: background-color 0.2s ease-in-out, transform 0.1s ease, box-shadow 0.2s ease;
-}
-
-button:active {
-    transform: translateY(1px);
-}
-
-#adicionar {
-    background-color: var(--btn-add-bg);
-    color: white;
-    padding: 12px 10px;
-}
-
-
-h3 {
-    color: var(--text-secondary);
-    margin-top: 5px;
-}
-
-#diferenca {
     font-weight: bold;
-    color: var(--text-primary);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
-footer {
-    margin-top: 30px;
-    font-size: 0.9em;
-    color: var(--text-secondary);
+#adicionar:hover { background: var(--btn-add-hover); }
+
+.difference-text {
+    width: 100%;
+    margin-top: 20px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* Modal e Histórico Trabalhado */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(3px);
+}
+
+.modal-content {
+    background: var(--bg-card);
+    margin: 15% auto;
+    padding: 25px;
+    width: 85%;
+    max-width: 360px;
+    border-radius: var(--border-radius-lg);
+    color: var(--text-primary);
+    text-align: center;
+}
+
+.round-card {
+    background: rgba(0,0,0,0.1);
+    margin-bottom: 12px;
+    padding: 15px;
+    border-radius: var(--border-radius-md);
+    text-align: left;
+    border-left: 5px solid transparent;
+}
+
+body.light-mode .round-card {
+    background: #f8f9fa;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+}
+
+.round-card.winner-1 { border-left-color: var(--accent-green); }
+.round-card.winner-2 { border-left-color: var(--accent-blue); }
+
+.round-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    font-weight: bold;
+    opacity: 0.6;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.round-scores {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+.round-diff {
+    font-size: 0.8rem;
+    margin-top: 5px;
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.btn-close-modal {
+    margin-top: 15px;
+    width: 100%;
+    padding: 12px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-weight: bold;
+    cursor: pointer;
 }
