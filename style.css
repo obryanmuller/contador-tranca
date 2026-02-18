@@ -1,50 +1,33 @@
-/* Variáveis e Definição de Temas */
+/* Variáveis */
 :root {
-    --bg-body: #2c3e50;
+    --bg-body: #2c3e50; /* Azul Sólido Padrão */
     --bg-card: #34495e;
     --text-primary: #ecf0f1;
     --text-secondary: #bdc3c7;
     --input-bg: #3e5266;
     --input-border: #556a80;
     --shadow-color: rgba(0, 0, 0, 0.35);
-    
     --accent-green: #1abc9c;
     --accent-blue: #3498db;
     --accent-red: #e74c3c;
     --btn-add-bg: #27ae60;
-    --btn-add-hover: #2ecc71;
     --font-main: 'Nunito', Arial, sans-serif;
     --border-radius-lg: 12px;
     --border-radius-md: 8px;
     --border-radius-sm: 6px;
 }
 
-/* Modo Claro */
 body.light-mode {
     --bg-body: #f0f2f5;
     --bg-card: #ffffff;
     --text-primary: #34495e;
-    --text-secondary: #6b7280;
-    --input-bg: #e9ecef;
-    --input-border: #ced4da;
-    --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
-/* Reset Global para PWA */
-* {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
     font-family: var(--font-main);
-    /* ADIÇÃO DA IMAGEM DE FUNDO */
-    background-image: url('Fundo.png');
-    background-size: cover;        /* Garante que a imagem cubra toda a tela */
-    background-position: center;   /* Centraliza a imagem */
-    background-attachment: fixed; /* Mantém o fundo fixo ao rolar no iPhone */
-    background-repeat: no-repeat;
-    
+    background-color: var(--bg-body); /* Azul sólido para iPhone */
     color: var(--text-primary);
     display: flex;
     justify-content: center;
@@ -52,10 +35,19 @@ body {
     min-height: 100vh;
     margin: 0;
     padding: 15px;
-    transition: background-color 0.3s;
+    transition: background 0.3s;
 }
 
-/* Container Principal Centralizado */
+/* APENAS PARA COMPUTADOR (Telas maiores que 768px) */
+@media (min-width: 768px) {
+    body {
+        background-image: url('Fundo.png');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
+}
+
 .container {
     position: relative;
     width: 100%;
@@ -70,7 +62,7 @@ body {
     text-align: center;
 }
 
-/* Ícones de Gestão no Topo */
+/* Ícones de Gestão */
 .header-icons {
     position: absolute;
     top: 15px;
@@ -86,32 +78,17 @@ body {
     color: var(--text-primary);
     cursor: pointer;
     opacity: 0.7;
-    transition: 0.2s;
-}
-
-.icon-btn:hover {
-    opacity: 1;
-    transform: scale(1.1);
 }
 
 .finish-icon:hover { color: var(--accent-green); }
-.reset-icon:hover { color: var(--accent-red); }
 
-h2 {
-    font-size: 2rem;
-    margin: 10px 0 20px 0;
-    width: 100%;
-}
-
-/* Placar Principal */
 .scoreboard {
     display: flex;
     justify-content: space-around;
-    align-items: center;
     width: 100%;
     font-size: 2.8rem;
     font-weight: 800;
-    margin-bottom: 20px;
+    margin: 20px 0;
     padding: 20px 10px;
     background: rgba(0,0,0,0.1);
     border-radius: var(--border-radius-md);
@@ -120,97 +97,17 @@ h2 {
 #total1 { color: var(--accent-green); }
 #total2 { color: var(--accent-blue); }
 
-/* Nomes das Duplas */
-.players {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    margin-bottom: 15px;
-}
+.players { display: flex; justify-content: center; gap: 10px; width: 100%; margin-bottom: 15px; }
+.players input { background: transparent; border: none; border-bottom: 1px solid var(--text-secondary); color: inherit; font-weight: bold; text-align: center; width: 40%; outline: none; }
 
-.players input {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--text-secondary);
-    color: inherit;
-    font-weight: bold;
-    text-align: center;
-    width: 40%;
-    outline: none;
-    font-size: 1rem;
-}
+.input-section { display: flex; gap: 10px; width: 100%; margin-bottom: 15px; }
+input[type=number] { flex: 1; min-width: 0; padding: 12px; border-radius: var(--border-radius-sm); border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-primary); text-align: center; }
 
-/* Secção de Inputs Lado a Lado (Corrigida) */
-.input-section {
-    display: flex;
-    gap: 10px;
-    width: 100%;
-    margin-bottom: 15px;
-}
+#adicionar { width: 100%; padding: 15px; background: var(--btn-add-bg); color: white; border: none; border-radius: var(--border-radius-sm); font-weight: bold; cursor: pointer; }
 
-input[type=number] {
-    flex: 1;
-    min-width: 0;
-    padding: 12px;
-    border-radius: var(--border-radius-sm);
-    border: 1px solid var(--input-border);
-    background: var(--input-bg);
-    color: var(--text-primary);
-    text-align: center;
-    font-size: 1rem;
-    outline: none;
-}
-
-input[type=number]:focus {
-    border-color: var(--accent-green);
-}
-
-/* Botão Adicionar */
-#adicionar {
-    width: 100%;
-    padding: 15px;
-    background: var(--btn-add-bg);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius-sm);
-    font-weight: bold;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-#adicionar:hover { background: var(--btn-add-hover); }
-
-.difference-text {
-    width: 100%;
-    margin-top: 20px;
-    font-size: 1rem;
-    font-weight: bold;
-}
-
-/* Modal e Histórico Trabalhado */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(3px);
-}
-
-.modal-content {
-    background: var(--bg-card);
-    margin: 15% auto;
-    padding: 25px;
-    width: 85%;
-    max-width: 360px;
-    border-radius: var(--border-radius-lg);
-    color: var(--text-primary);
-    text-align: center;
-}
+/* Modal e Histórico */
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); }
+.modal-content { background: var(--bg-card); margin: 15% auto; padding: 25px; width: 85%; max-width: 360px; border-radius: var(--border-radius-lg); color: var(--text-primary); }
 
 .round-card {
     background: rgba(0,0,0,0.1);
@@ -221,47 +118,11 @@ input[type=number]:focus {
     border-left: 5px solid transparent;
 }
 
-body.light-mode .round-card {
-    background: #f8f9fa;
-    border: 1px solid #eee;
-    border-left-width: 5px;
-}
-
 .round-card.winner-1 { border-left-color: var(--accent-green); }
 .round-card.winner-2 { border-left-color: var(--accent-blue); }
 
-.round-header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.7rem;
-    font-weight: bold;
-    opacity: 0.6;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-}
+.round-header { display: flex; justify-content: space-between; font-size: 0.7rem; opacity: 0.6; margin-bottom: 5px; text-transform: uppercase; }
+.round-scores { display: flex; justify-content: space-between; font-weight: 800; font-size: 1.1rem; }
+.round-diff { font-size: 0.8rem; margin-top: 5px; opacity: 0.7; font-style: italic; }
 
-.round-scores {
-    display: flex;
-    justify-content: space-between;
-    font-weight: 800;
-    font-size: 1.1rem;
-}
-
-.round-diff {
-    font-size: 0.8rem;
-    margin-top: 5px;
-    opacity: 0.7;
-    font-style: italic;
-}
-
-.btn-close-modal {
-    margin-top: 15px;
-    width: 100%;
-    padding: 12px;
-    background: #6c757d;
-    color: white;
-    border: none;
-    border-radius: var(--border-radius-sm);
-    font-weight: bold;
-    cursor: pointer;
-}
+.btn-close-modal { margin-top: 15px; width: 100%; padding: 12px; background: #6c757d; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
